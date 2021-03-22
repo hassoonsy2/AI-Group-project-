@@ -1,8 +1,13 @@
 # AI-Group-project-
+## Recommendation Engine 
 
-#GP-v1a-projectgroep-5 
+A recommendation engine is a system that suggests products, services, information to users based on analysis of data. Notwithstanding, the recommendation can derive from a variety of factors such as the history of the user and the behaviour of similar users.
+Recommendation systems are quickly becoming the primary way for users to expose to the whole digital world through the lens of their experiences, behaviours, preferences and interests. And in a world of information density and product overload, a recommendation engine provides an efficient way for companies to provide consumers with personalised information and solutions.
+
+ 
 
 ## Authors
+GP-v1a-projectgroep-5
 
 * **Hussin Almoustafa**- 1776495- [Github](https://github.com/hassoonsy2)
 * **Martin Rog**- 1792195  - [Github](https://github.com/martinrog)
