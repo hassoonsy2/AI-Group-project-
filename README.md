@@ -6,7 +6,7 @@ Recommendation systems are quickly becoming the primary way for users to expose 
 
 ![pic1](https://user-images.githubusercontent.com/71430169/111980425-945b2d00-8b06-11eb-8c0d-6e36add7e51f.png)
 
-## Our Database 
+## Our Database Model 
 
 ![db](https://user-images.githubusercontent.com/71430169/111980520-b359bf00-8b06-11eb-916c-81b43d73630d.PNG)
 
