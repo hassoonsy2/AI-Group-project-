@@ -15,14 +15,14 @@ class HUWebshop(object):
     Note that all rendering is performed within the templates themselves."""
 
     app = None
-    client = MongoClient()
-    database = client["huwebshow"]
+    client = None
+    database = None
 
     envvals = ["MONGODBUSER","MONGODBPASSWORD","MONGODBSERVER","RECOMADDRESS"]
     dbstring = 'mongodb+srv://{0}:{1}@{2}/test?retryWrites=true&w=majority'
-    recseraddress = "http://127.0.0.1:5000"
+    recseraddress = "http://127.0.0.1:5001"
 
-    categoryindex = database["categoryindex"]
+    categoryindex = None
     catlevels = ["category","sub_category","sub_sub_category","sub_sub_sub_category"]
     catencode = {}
     catdecode = {}
@@ -46,18 +46,18 @@ class HUWebshop(object):
         # to a local or remote instance of MongoDB, and a default or non-default
         # external recommendation service.
         load_dotenv()
-        # envdict = {}
-        # if os.getenv(self.envvals[0]) is not None:
-        #     for val in self.envvals:
-        #         envdict[val] = str(os.getenv(val))
-        #     if envdict["MONGODBUSER"] and envdict["MONGODBPASSWORD"] and envdict["MONGODBSERVER"]:
-        #         self.client = MongoClient(self.dbstring.format(envdict["MONGODBUSER"], envdict["MONGODBPASSWORD"], envdict["MONGODBSERVER"]))
-        #     else:
-        #         self.client = MongoClient()
-        #     if envdict["RECOMADDRESS"]:
-        #         self.recseraddress = envdict["RECOMADDRESS"]
-        # else:
-        self.client = MongoClient()
+        envdict = {}
+        if os.getenv(self.envvals[0]) is not None:
+            for val in self.envvals:
+                envdict[val] = str(os.getenv(val))
+            if envdict["MONGODBUSER"] and envdict["MONGODBPASSWORD"] and envdict["MONGODBSERVER"]:
+                self.client = MongoClient(self.dbstring.format(envdict["MONGODBUSER"], envdict["MONGODBPASSWORD"], envdict["MONGODBSERVER"]))
+            else:
+                self.client = MongoClient()
+            if envdict["RECOMADDRESS"]:
+                self.recseraddress = envdict["RECOMADDRESS"]
+        else:
+            self.client = MongoClient()
         self.database = self.client.huwebshop 
 
         # Once we have a connection to the database, we check to see whether it
@@ -174,8 +174,6 @@ class HUWebshop(object):
     def prepproduct(self,p):
         """ This helper function flattens and rationalizes the values retrieved
         for a product block element. """
-
-
         r = {}
         r['name'] = p['name']
         r['price'] = p['price']['selling_price']
