@@ -60,7 +60,7 @@ class Recom(Resource):
         result = sql_select(""" SELECT prodid , name
             FROM BEST_seller
             WHERE Counter > 1000
-            LIMIT 4;""")
+            LIMIT 8;""")
         commit()
         for elment in result :
             id_lists.append(elment[0])
