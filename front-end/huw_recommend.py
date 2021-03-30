@@ -48,12 +48,16 @@ class Recom(Resource):
     the webshop. At the moment, the API simply returns a random set of products
     to recommend."""
 
-    def get(self, profileid, count):
+    def get(self,profileid, productdetail,  count ):
         """ This function represents the handler for GET requests coming in
         through the API. It currently returns a random sample of products. """
         randcursor = database.products.aggregate([{ '$sample': { 'size': count } }])
-        prodids = self.simpel_reco()
-        return prodids, 200
+        if productdetail == "producten" :
+            prdids = self.simpel_reco()
+
+        else:
+            prdids = self.Mannen()
+        return prdids, 200
 
     def simpel_reco(self):
         id_lists = []
@@ -66,9 +70,19 @@ class Recom(Resource):
             id_lists.append(elment[0])
         return id_lists
 
+    def Mannen(self):
+        id_list= []
+        result = sql_select("""SELECT prodid , name 
+                                FROM personas_mannen
+                                 LIMIT 4 ;""")
+        commit()
+        for elment in result :
+            id_list.append(elment[0])
+        return id_list
+
 
 
 
 # This method binds the Recom class to the REST API, to parse specifically
 # requests in the format described below.
-api.add_resource(Recom, "/<string:profileid>/<int:count>")
+api.add_resource(Recom, "/<string:profileid>/<string:productdetail>/<int:count>")
