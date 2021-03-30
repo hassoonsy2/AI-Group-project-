@@ -231,7 +231,7 @@ class HUWebshop(object):
         service. At the moment, it only transmits the profile ID and the number
         of expected recommendations; to have more user information in the REST
         request, this function would have to change."""
-        resp = requests.get(self.recseraddress+"/productdetail/"+session['profile_id']+"/"+str(count))
+        resp = requests.get(self.recseraddress+"/"+session['profile_id']+"/"+str(count))
         if resp.status_code == 200:
             recs = eval(resp.content.decode())
             queryfilter = {"_id": {"$in": recs}}
