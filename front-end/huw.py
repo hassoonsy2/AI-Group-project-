@@ -271,8 +271,8 @@ class HUWebshop(object):
             'prevpage': pagepath+str(page-1) if (page > 1) else False, \
             'nextpage': pagepath+str(page+1) if (session['items_per_page']*page < prodcount) else False, \
             'r_products':self.recommendations(productid=0,count=4), \
-            'r_type':list(self.recommendationtypes.keys())[0],\
-            'r_string':list(self.recommendationtypes.values())[0]
+            'r_type':list(self.recommendationtypes.keys())[4],\
+            'r_string':list(self.recommendationtypes.values())[4]
             })
 
     def productdetail(self, productid):

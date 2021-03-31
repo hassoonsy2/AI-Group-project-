@@ -65,6 +65,7 @@ class Recom(Resource):
                    '5bc9f26efd58b6000143d8c8', '5b55eca44a76420001d3e0be', '5b748ee397d5560001983e1b', '5bcb79a291c0f5000101253c',
                    '5bb26141a6578c0001c116a0', '5a09979ea56ac6edb4ef7b99', '5ae4995582f803000187025d', '5b55ac1ce3840d0001cda710',
                    '59dce7c0a56ac6edb4ca7888', '5a140809a56ac6edb4fb3242', '59dcf04ca56ac6edb4dfd3ca', '5b444ca161afda0001c56cb6',]
+    test_id = ['59dce304a56ac6edb4c118e4']
 
     def get(self,profileid,productid,  count ):
         """ This function represents the handler for GET requests coming in
@@ -72,11 +73,16 @@ class Recom(Resource):
         randcursor = database.products.aggregate([{ '$sample': { 'size': count } }])
 
 
+        if profileid in self.test_id :
+            if productid != 0 :
+                prdids = self.soortgelijk(productid)
 
-        if productid != 0 :
-            prdids = self.soortgelijk(productid)
+                return prdids, 200
 
+
+            prdids = self.simpel_reco()
             return prdids, 200
+
 
 
         elif profileid in self.mannen_id:
@@ -91,6 +97,11 @@ class Recom(Resource):
             prdids = self.kinderen()
             return prdids, 200
 
+        else:
+            prdids = self.simpel_reco()
+            return prdids, 200
+
+
 
 
 
@@ -102,24 +113,16 @@ class Recom(Resource):
                                           Where id = (%s);""", [productid]) :
             subsubcatgo = i
             c.commit()
-
-
             for i in sql_execute("""Select prodid from soortgelijke_producten 
                         where  subsubcategory = (%s)
                         LIMIT 4;""",[subsubcatgo]) :
                 ids.append(i[0])
-
         return ids
 
 
 
 
-
-
-
-
     def simpel_reco(self):
-
         id_lists = []
         result = sql_select(""" SELECT prodid , name
             FROM BEST_seller
@@ -129,6 +132,7 @@ class Recom(Resource):
         for elment in result :
             id_lists.append(elment[0])
         return id_lists
+
 
     def Mannen(self):
         id_list= []
@@ -140,15 +144,17 @@ class Recom(Resource):
             id_list.append(elment[0])
         return id_list
 
+
     def Vrouwen(self):
         id_list= []
         result = sql_select("""SELECT prodid
-                                FROM personas_recommendations WHERE targetaudience = 'Vrouwen'
-                                 LIMIT 4 ;""")
+                                FROM personas_recommendations WHERE targetaudience = 'Vrouwen' 
+                                 LIMIT 5  ;""")
         c.commit()
         for elment in result:
             id_list.append(elment[0])
         return id_list
+
 
     def kinderen(self):
         id_list= []

@@ -39,8 +39,8 @@ def sql_query(sql):
 
 
 
-def select_profiels_en_producten():
-    """ This function will Select & count every product from Tabel profiles previously viewed on the Postgres db """
+def select_profiels_en_producten_from_previously_viewed():
+    """ This function will Select profiels id's and products id's from tabel previously_viewed """
 
     try:
         return sql_select("""SELECT profiles_previously_viewed.profid, profiles_previously_viewed.prodid,products.name, products.subcategory,products.targetaudience,COUNT(prodid)
@@ -54,8 +54,8 @@ def select_profiels_en_producten():
         print(error)
 
 
-def select_profiels_en_producten1():
-    """ This function will Select & count every product from Tabel profiles previously viewed on the Postgres db """
+def select_profiels_en_producten_from_orders():
+    """ This function will Select profiels id's and products id's from tabel Orders   """
 
     try:
         return sql_select("""SELECT orders.sessionsid, sessions.profid,orders.prodid,products.name, products.subcategory,products.targetaudience,COUNT(prodid)
@@ -76,42 +76,40 @@ Vrouwen = []
 Mannen = []
 Kinderen = []
 
-t = ["Baby's", "Jongen", "Meisje", "Volwassenen", "Vrouwen", "Kinderen", "Mannen"]
+gender = ["Baby's", "Jongen", "Meisje", "Volwassenen", "Vrouwen", "Kinderen", "Mannen"]
 
-for i in select_profiels_en_producten1():
-    print(i)
-
-    if i[5] == t[6] :
+for i in select_profiels_en_producten_from_orders():
+    if i[5] == gender[6] :
         Mannen.append(i)
         continue
 
-    elif i[5] == t[0] or i[5] ==t[1] or i[5] ==t[5] :
+    elif i[5] == gender[0] or i[5] == gender[1] or i[5] == gender[5] :
         Kinderen.append(i[1:])
         continue
 
-    elif i[5] == t[2] or i[5] ==t[4] :
+    elif i[5] == gender[2] or i[5] == gender[4] :
         Vrouwen.append(i[1:])
         continue
 
 
 
-print("orders gefilterd")
+print("Kennis van orders zijn gefilterd")
 
-for i in select_profiels_en_producten():
-    if i[4] == t[6] :
+for i in select_profiels_en_producten_from_previously_viewed():
+    if i[4] == gender[6] :
         Mannen.append(i)
         continue
 
-    elif i[4] == t[0] or i[4] ==t[1] or i[4] ==t[5] :
+    elif i[4] == gender[0] or i[4] == gender[1] or i[4] == gender[5] :
         Kinderen.append(i)
         continue
 
-    elif i[4] == t[2] or i[4] ==t[4] :
+    elif i[4] == gender[2] or i[4] == gender[4] :
         Vrouwen.append(i)
         continue
 
 
-print("profiles_previously_viewed gefilterd")
+print("Kennis van profiles_previously_viewed zijn gefilterd")
 
 
 
@@ -212,30 +210,31 @@ try:
 except (Exception, psycopg2.DatabaseError) as error:
     print(error)
 
-def Mannen():
+def personas_recommendations():
+    """ This function will select few products from each peronas tabels in a personas_recommendations tabel  """
     id_list= []
-    result = sql_select("""SELECT prodid , targetaudience
+    resul_mannen = sql_select("""SELECT prodid , targetaudience
                             FROM personas_mannen
-                             LIMIT 4 ;""")
+                             LIMIT 6 ;""")
     c.commit()
 
-    result1 =sql_select("""SELECT prodid ,  targetaudience
+    result_vrouwen =sql_select("""SELECT prodid ,  targetaudience
                             FROM personas_vrouwen
-                             LIMIT 4 ;""")
+                             LIMIT 6 ;""")
     c.commit()
 
-    result2 =sql_select("""SELECT prodid ,  targetaudience
+    result_kinderen =sql_select("""SELECT prodid ,  targetaudience
                             FROM personas_kinderen
                             where targetaudience = 'Kinderen'
-                             LIMIT 4 ;""")
+                             LIMIT 6 ;""")
     c.commit()
-    for elment in result :
+    for elment in resul_mannen :
         id_list.append(elment)
         continue
-    for elment in result1:
+    for elment in result_vrouwen:
         id_list.append(elment)
         continue
-    for elment in result2:
+    for elment in result_kinderen:
         id_list.append(elment)
         continue
     print(id_list)
@@ -250,7 +249,7 @@ def Mannen():
 
 
 
-Mannen()
+personas_recommendations()
 
 
 
