@@ -43,7 +43,6 @@ def sql_execute(sql,value):
     cur = c.cursor()
     cur.execute(sql,value)
     results = cur.fetchall()
-    c.commit()
     return results
 
 
@@ -67,38 +66,48 @@ class Recom(Resource):
                    '5bb26141a6578c0001c116a0', '5a09979ea56ac6edb4ef7b99', '5ae4995582f803000187025d', '5b55ac1ce3840d0001cda710',
                    '59dce7c0a56ac6edb4ca7888', '5a140809a56ac6edb4fb3242', '59dcf04ca56ac6edb4dfd3ca', '5b444ca161afda0001c56cb6',]
 
-    def get(self,profileid,shoppingcart,  count ):
+    def get(self,profileid,productid,  count ):
         """ This function represents the handler for GET requests coming in
         through the API. It currently returns a random sample of products. """
         randcursor = database.products.aggregate([{ '$sample': { 'size': count } }])
 
-        if shoppingcart != 0 :
-            for i in sql_execute(""" Select name , subsubcategory from products 
-                            Where id = (%s)""", [shoppingcart]) :
-                print(i)
-                subsubcategory = i[1]
-                print(sql_execute("""Select id , name  from products 
-                            Where subcategory NOTNULL 
-                            and subsubcategory NOTNULL 
-                            and subsubcategory = (%s)  
-                            limit 4
-                             ;""",[subsubcategory]))
 
 
-
-
-        if profileid in self.mannen_id:
-            prdids = self.Mannen()
+        if productid != 0 :
+            prdids = self.soortgelijk(productid)
+            print(prdids)
             return prdids, 200
-        elif profileid in self.vrouwen_id:
-            prdids = self.Vrouwen()
-            return prdids, 200
-        elif profileid in self.kinderen_id:
-            prdids = self.kinderen()
-            return prdids, 200
+
+
+        # elif profileid in self.mannen_id:
+        #     prdids = self.Mannen()
+        #     return prdids, 200
+        #
+        # elif profileid in self.vrouwen_id:
+        #     prdids = self.Vrouwen()
+        #     return prdids, 200
+        #
+        # elif profileid in self.kinderen_id:
+        #     prdids = self.kinderen()
+        #     return prdids, 200
+
         else:
+
             prdids = self.simpel_reco()
             return prdids, 200
+
+
+
+
+    def soortgelijk(self, productid):
+        for i in sql_execute(""" Select subsubcategory from products 
+                                          Where id = (%s);""", [productid]) :
+            subsubcatgo = i
+            c.commit()
+
+            return sql_execute("""Select prodid from soortgelijke_producten 
+                        where  subsubcategory = (%s)
+                        LIMIT 4;""",[subsubcatgo])
 
 
 
@@ -151,4 +160,4 @@ class Recom(Resource):
 
 # This method binds the Recom class to the REST API, to parse specifically
 # requests in the format described below.
-api.add_resource(Recom, "/<string:profileid>/<string:shoppingcart>/<int:count>")
+api.add_resource(Recom, "/<string:profileid>/<string:productid>/<int:count>")
