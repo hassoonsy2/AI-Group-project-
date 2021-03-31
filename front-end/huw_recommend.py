@@ -38,6 +38,14 @@ def sql_select(sql):
     results = cur.fetchall()
     return results
 
+def sql_execute(sql,value):
+    """This function executes a query on the Postgres db"""
+    cur = c.cursor()
+    cur.execute(sql,value)
+    results = cur.fetchall()
+    c.commit()
+    return results
+
 
 class Recom(Resource):
     """ This class represents the REST API that provides the recommendations for
@@ -63,8 +71,21 @@ class Recom(Resource):
         """ This function represents the handler for GET requests coming in
         through the API. It currently returns a random sample of products. """
         randcursor = database.products.aggregate([{ '$sample': { 'size': count } }])
-        for i in shoppingcart :
-            print(i)
+
+        if shoppingcart != 0 :
+            for i in sql_execute(""" Select name , subsubcategory from products 
+                            Where id = (%s)""", [shoppingcart]) :
+                print(i)
+                subsubcategory = i[1]
+                print(sql_execute("""Select id , name  from products 
+                            Where subcategory NOTNULL 
+                            and subsubcategory NOTNULL 
+                            and subsubcategory = (%s)  
+                            limit 4
+                             ;""",[subsubcategory]))
+
+
+
 
         if profileid in self.mannen_id:
             prdids = self.Mannen()
