@@ -75,39 +75,44 @@ class Recom(Resource):
 
         if productid != 0 :
             prdids = self.soortgelijk(productid)
-            print(prdids)
+
             return prdids, 200
 
 
-        # elif profileid in self.mannen_id:
-        #     prdids = self.Mannen()
-        #     return prdids, 200
-        #
-        # elif profileid in self.vrouwen_id:
-        #     prdids = self.Vrouwen()
-        #     return prdids, 200
-        #
-        # elif profileid in self.kinderen_id:
-        #     prdids = self.kinderen()
-        #     return prdids, 200
-
-        else:
-
-            prdids = self.simpel_reco()
+        elif profileid in self.mannen_id:
+            prdids = self.Mannen()
             return prdids, 200
+
+        elif profileid in self.vrouwen_id:
+            prdids = self.Vrouwen()
+            return prdids, 200
+
+        elif profileid in self.kinderen_id:
+            prdids = self.kinderen()
+            return prdids, 200
+
+
 
 
 
 
     def soortgelijk(self, productid):
+        ids = []
         for i in sql_execute(""" Select subsubcategory from products 
                                           Where id = (%s);""", [productid]) :
             subsubcatgo = i
             c.commit()
 
-            return sql_execute("""Select prodid from soortgelijke_producten 
+
+            for i in sql_execute("""Select prodid from soortgelijke_producten 
                         where  subsubcategory = (%s)
-                        LIMIT 4;""",[subsubcatgo])
+                        LIMIT 4;""",[subsubcatgo]) :
+                ids.append(i[0])
+
+        return ids
+
+
+
 
 
 
@@ -119,7 +124,7 @@ class Recom(Resource):
         result = sql_select(""" SELECT prodid , name
             FROM BEST_seller
             WHERE Counter > 1000
-            LIMIT 8;""")
+            LIMIT 4;""")
         c.commit()
         for elment in result :
             id_lists.append(elment[0])

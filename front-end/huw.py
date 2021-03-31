@@ -208,9 +208,10 @@ class HUWebshop(object):
         """ This helper function adds all generally important variables to the
         packet sent to the templating engine, then calss upon Flask to forward
         the rendering to Jinja. """
-        packet['r_products'] = self.recommendations(productid= 0,count=4)
-        packet['r_type'] = list(self.recommendationtypes.keys())[0]
-        packet['r_string'] = list(self.recommendationtypes.values())[0]
+        if 'r_products' not in packet :
+            packet['r_products'] = self.recommendations(productid= 0,count=4)
+            packet['r_type'] = list(self.recommendationtypes.keys())[0]
+            packet['r_string'] = list(self.recommendationtypes.values())[0]
         packet['categoryindex'] = self.categoryindex
         packet['mainmenulist'] = self.mainmenuitems
         packet['categories_encode'] = self.catencode
