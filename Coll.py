@@ -6,7 +6,7 @@ from psycopg2 import Error
 
 def connect():
     """This function is the connection with the postgres db"""
-    connection = psycopg2.connect(host='localhost', database='huwebshope1', user='postgres', password='Lafa22446688##')
+    connection = psycopg2.connect(host='localhost', database='huwebshop', user='postgres', password='Xplod_555')
     return connection
 
 c = connect()
@@ -78,52 +78,52 @@ Kinderen = []
 
 t = ["Baby's", "Jongen", "Meisje", "Volwassenen", "Vrouwen", "Kinderen", "Mannen"]
 
-# for i in select_profiels_en_producten1():
-#     print(i)
-#
-#     if i[5] == t[6] :
-#         Mannen.append(i)
-#         continue
-#
-#     elif i[5] == t[0] or i[5] ==t[1] or i[5] ==t[5] :
-#         Kinderen.append(i[1:])
-#         continue
-#
-#     elif i[5] == t[2] or i[5] ==t[4] :
-#         Vrouwen.append(i[1:])
-#         continue
-#
-#
-#
-# print("orders gefilterd")
-#
-# for i in select_profiels_en_producten():
-#     if i[4] == t[6] :
-#         Mannen.append(i)
-#         continue
-#
-#     elif i[4] == t[0] or i[4] ==t[1] or i[4] ==t[5] :
-#         Kinderen.append(i)
-#         continue
-#
-#     elif i[4] == t[2] or i[4] ==t[4] :
-#         Vrouwen.append(i)
-#         continue
-#
-#
-# print("profiles_previously_viewed gefilterd")
-#
+for i in select_profiels_en_producten1():
+    print(i)
+
+    if i[5] == t[6] :
+        Mannen.append(i)
+        continue
+
+    elif i[5] == t[0] or i[5] ==t[1] or i[5] ==t[5] :
+        Kinderen.append(i[1:])
+        continue
+
+    elif i[5] == t[2] or i[5] ==t[4] :
+        Vrouwen.append(i[1:])
+        continue
 
 
 
-#
-# sql_query("""DROP TABLE IF EXISTS personas_mannen CASCADE""")
-#
-#
-# sql_query("""DROP TABLE IF EXISTS personas_vrouwen CASCADE""")
-#
-#
-# sql_query("""DROP TABLE IF EXISTS personas_kinderen CASCADE""")
+print("orders gefilterd")
+
+for i in select_profiels_en_producten():
+    if i[4] == t[6] :
+        Mannen.append(i)
+        continue
+
+    elif i[4] == t[0] or i[4] ==t[1] or i[4] ==t[5] :
+        Kinderen.append(i)
+        continue
+
+    elif i[4] == t[2] or i[4] ==t[4] :
+        Vrouwen.append(i)
+        continue
+
+
+print("profiles_previously_viewed gefilterd")
+
+
+
+
+
+sql_query("""DROP TABLE IF EXISTS personas_mannen CASCADE""")
+
+
+sql_query("""DROP TABLE IF EXISTS personas_vrouwen CASCADE""")
+
+
+sql_query("""DROP TABLE IF EXISTS personas_kinderen CASCADE""")
 
 
 sql_query("""DROP TABLE IF EXISTS personas_recommendations CASCADE""")
@@ -131,33 +131,33 @@ sql_query("""DROP TABLE IF EXISTS personas_recommendations CASCADE""")
 
 
 
-# sql_query("""CREATE TABLE personas_mannen
-#                             (prodid VARCHAR  ,
-#                             name VARCHAR,
-#                             profid VARCHAR  ,
-#                             subcategory VARCHAR ,
-#                             targetaudience VARCHAR,
-#                             FOREIGN KEY (profid) REFERENCES profiles(id),
-#                             FOREIGN KEY (prodid) REFERENCES products(id));""")
-# print("tabel personas_mannen gemaakt ")
-# sql_query("""CREATE TABLE personas_vrouwen
-#                             (prodid VARCHAR ,
-#                             name VARCHAR,
-#                             profid VARCHAR  ,
-#                             subcategory VARCHAR ,
-#                             targetaudience VARCHAR,
-#                             FOREIGN KEY (profid) REFERENCES profiles(id),
-#                             FOREIGN KEY (prodid) REFERENCES products(id));""")
-# print("tabel personas_vrouwen gemaakt ")
-# sql_query("""CREATE TABLE personas_kinderen
-#                             (prodid VARCHAR ,
-#                             name VARCHAR,
-#                             profid VARCHAR ,
-#                             subcategory VARCHAR ,
-#                             targetaudience VARCHAR,
-#                             FOREIGN KEY (profid) REFERENCES profiles(id),
-#                             FOREIGN KEY (prodid) REFERENCES products(id));""")
-# print("tabel personas_kinderen gemaakt ")
+sql_query("""CREATE TABLE personas_mannen
+                            (prodid VARCHAR  ,
+                            name VARCHAR,
+                            profid VARCHAR  ,
+                            subcategory VARCHAR ,
+                            targetaudience VARCHAR,
+                            FOREIGN KEY (profid) REFERENCES profiles(id),
+                            FOREIGN KEY (prodid) REFERENCES products(id));""")
+print("tabel personas_mannen gemaakt ")
+sql_query("""CREATE TABLE personas_vrouwen
+                            (prodid VARCHAR ,
+                            name VARCHAR,
+                            profid VARCHAR  ,
+                            subcategory VARCHAR ,
+                            targetaudience VARCHAR,
+                            FOREIGN KEY (profid) REFERENCES profiles(id),
+                            FOREIGN KEY (prodid) REFERENCES products(id));""")
+print("tabel personas_vrouwen gemaakt ")
+sql_query("""CREATE TABLE personas_kinderen
+                            (prodid VARCHAR ,
+                            name VARCHAR,
+                            profid VARCHAR ,
+                            subcategory VARCHAR ,
+                            targetaudience VARCHAR,
+                            FOREIGN KEY (profid) REFERENCES profiles(id),
+                            FOREIGN KEY (prodid) REFERENCES products(id));""")
+print("tabel personas_kinderen gemaakt ")
 sql_query("""CREATE TABLE personas_recommendations
                             (prodid VARCHAR ,
                             targetaudience VARCHAR,
@@ -167,50 +167,50 @@ c.commit()
 
 
 
-# try:
-#     for i in Mannen:
-#         if len(i[0]) == 24 :
-#             profid = i[0]
-#             prodid = i[1]
-#             name = i[2]
-#             subcategory = i[3]
-#             targetaudience = i[4]
-#             sql_execute(
-#                 "Insert into personas_mannen(profid ,prodid , name, subcategory ,  targetaudience ) VALUES (%s , %s, %s, %s,%s)",
-#                [profid, prodid, name, subcategory, targetaudience])
-#     c.commit()
-#     print("MANNEN Done")
-#
-#     for i in Vrouwen:
-#         if len(i[0]) == 24:
-#             profid = i[0]
-#             prodid = i[1]
-#             name = i[2]
-#             subcategory = i[3]
-#             targetaudience = i[4]
-#
-#             sql_execute(
-#                 "Insert into personas_vrouwen(profid ,prodid , name, subcategory ,  targetaudience ) VALUES (%s , %s, %s, %s,%s)",
-#                 [profid, prodid, name, subcategory, targetaudience])
-#
-#     c.commit()
-#     print("Vrouwen Done")
-#     for i in Kinderen:
-#         if len(i[0]) == 24:
-#             profid = i[0]
-#             prodid = i[1]
-#             name = i[2]
-#             subcategory = i[3]
-#             targetaudience = i[4]
-#             sql_execute(
-#                 "Insert into personas_kinderen(profid ,prodid , name, subcategory ,  targetaudience ) VALUES (%s , %s, %s, %s,%s)",
-#                 [profid, prodid, name, subcategory, targetaudience])
-#     c.commit()
-#     print("Kinderenen Done")
-#
-#
-# except (Exception, psycopg2.DatabaseError) as error:
-#     print(error)
+try:
+    for i in Mannen:
+        if len(i[0]) == 24 :
+            profid = i[0]
+            prodid = i[1]
+            name = i[2]
+            subcategory = i[3]
+            targetaudience = i[4]
+            sql_execute(
+                "Insert into personas_mannen(profid ,prodid , name, subcategory ,  targetaudience ) VALUES (%s , %s, %s, %s,%s)",
+               [profid, prodid, name, subcategory, targetaudience])
+    c.commit()
+    print("MANNEN Done")
+
+    for i in Vrouwen:
+        if len(i[0]) == 24:
+            profid = i[0]
+            prodid = i[1]
+            name = i[2]
+            subcategory = i[3]
+            targetaudience = i[4]
+
+            sql_execute(
+                "Insert into personas_vrouwen(profid ,prodid , name, subcategory ,  targetaudience ) VALUES (%s , %s, %s, %s,%s)",
+                [profid, prodid, name, subcategory, targetaudience])
+
+    c.commit()
+    print("Vrouwen Done")
+    for i in Kinderen:
+        if len(i[0]) == 24:
+            profid = i[0]
+            prodid = i[1]
+            name = i[2]
+            subcategory = i[3]
+            targetaudience = i[4]
+            sql_execute(
+                "Insert into personas_kinderen(profid ,prodid , name, subcategory ,  targetaudience ) VALUES (%s , %s, %s, %s,%s)",
+                [profid, prodid, name, subcategory, targetaudience])
+    c.commit()
+    print("Kinderenen Done")
+
+
+except (Exception, psycopg2.DatabaseError) as error:
+    print(error)
 
 def Mannen():
     id_list= []

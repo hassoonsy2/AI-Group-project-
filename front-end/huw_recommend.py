@@ -26,7 +26,7 @@ database = client.huwebshop
 
 def connect():
     """This function is the connection with the postgres db"""
-    connection = psycopg2.connect(host='localhost', database='huwebshope1', user='postgres', password='Lafa22446688##')
+    connection = psycopg2.connect(host='localhost', database='huwebshop', user='postgres', password='Xplod_555')
     return connection
 
 c = connect()
@@ -59,10 +59,13 @@ class Recom(Resource):
                    '5bb26141a6578c0001c116a0', '5a09979ea56ac6edb4ef7b99', '5ae4995582f803000187025d', '5b55ac1ce3840d0001cda710',
                    '59dce7c0a56ac6edb4ca7888', '5a140809a56ac6edb4fb3242', '59dcf04ca56ac6edb4dfd3ca', '5b444ca161afda0001c56cb6',]
 
-    def get(self,profileid,  count ):
+    def get(self,profileid,shoppingcart,  count ):
         """ This function represents the handler for GET requests coming in
         through the API. It currently returns a random sample of products. """
         randcursor = database.products.aggregate([{ '$sample': { 'size': count } }])
+        for i in shoppingcart :
+            print(i)
+
         if profileid in self.mannen_id:
             prdids = self.Mannen()
             return prdids, 200
@@ -127,4 +130,4 @@ class Recom(Resource):
 
 # This method binds the Recom class to the REST API, to parse specifically
 # requests in the format described below.
-api.add_resource(Recom, "/<string:profileid>/<int:count>")
+api.add_resource(Recom, "/<string:profileid>/<string:shoppingcart>/<int:count>")
