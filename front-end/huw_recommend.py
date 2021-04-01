@@ -149,7 +149,7 @@ class Recom(Resource):
         id_list= []
         result = sql_select("""SELECT prodid
                                 FROM personas_recommendations WHERE targetaudience = 'Vrouwen' 
-                                 LIMIT 5  ;""")
+                                 LIMIT 6  ;""")
         c.commit()
         for elment in result:
             id_list.append(elment[0])
