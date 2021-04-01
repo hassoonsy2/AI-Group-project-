@@ -6,7 +6,7 @@ from psycopg2 import Error
 
 def connect():
     """This function is the connection with the postgres db"""
-    connection = psycopg2.connect(host='localhost', database='huwebshop', user='postgres', password='Xplod_555')
+    connection =  psycopg2.connect(host='localhost', database='huwebshope1', user='postgres', password='Lafa22446688##')
     return connection
 
 c = connect()
