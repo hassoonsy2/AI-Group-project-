@@ -67,39 +67,57 @@ class Recom(Resource):
                    '59dce7c0a56ac6edb4ca7888', '5a140809a56ac6edb4fb3242', '59dcf04ca56ac6edb4dfd3ca', '5b444ca161afda0001c56cb6',]
     test_id = ['59dce304a56ac6edb4c118e4']
 
-    def get(self,profileid,productid,  count ):
+    def get(self,profileid,productid,shopping_cart,  count ):
         """ This function represents the handler for GET requests coming in
         through the API. It currently returns a random sample of products. """
         randcursor = database.products.aggregate([{ '$sample': { 'size': count } }])
 
 
-        if profileid in self.test_id :
-            if productid != 0 :
-                prdids = self.soortgelijk(productid)
-
-                return prdids, 200
+        prod_shoping = shopping_cart[3:8]
 
 
+        if productid == "1":
             prdids = self.simpel_reco()
             return prdids, 200
 
+        elif productid == "2":
 
 
-        elif profileid in self.mannen_id:
-            prdids = self.Mannen()
+            prdids = self.schopping(prod_shoping)
             return prdids, 200
 
-        elif profileid in self.vrouwen_id:
-            prdids = self.Vrouwen()
+
+        elif productid == "3":
+
+            if profileid in self.mannen_id:
+                prdids = self.Mannen()
+                return prdids, 200
+
+            elif profileid in self.vrouwen_id:
+
+                prdids = self.Vrouwen()
+                return prdids, 200
+
+            elif profileid in self.kinderen_id:
+                prdids = self.kinderen()
+                return prdids, 200
+
+            else:
+                prdids = self.simpel_reco()
+                return prdids, 200
+
+
+
+        elif productid != "0":
+            prdids = self.soortgelijk(productid)
             return prdids, 200
 
-        elif profileid in self.kinderen_id:
-            prdids = self.kinderen()
-            return prdids, 200
 
         else:
             prdids = self.simpel_reco()
             return prdids, 200
+
+
 
 
 
@@ -166,9 +184,24 @@ class Recom(Resource):
             id_list.append(elment[0])
         return id_list
 
+    def schopping(self , prod_shoping):
+        id_list = []
+
+        resutls = sql_execute("""select combinatie_nr from combinatie_recommendations where prodid = (%s) ;  """,[prod_shoping])
+        cominatie = resutls[0]
+        print(cominatie[0])
+
+        id_combinatie = sql_execute("""select prodid from combinatie_recommendations where combinatie_nr = (%s) limit 4 ;""", [cominatie[0]])
+        for elment in id_combinatie:
+            id_list.append(elment[0])
+
+
+
+        return id_list
+
 
 
 
 # This method binds the Recom class to the REST API, to parse specifically
 # requests in the format described below.
-api.add_resource(Recom, "/<string:profileid>/<string:productid>/<int:count>")
+api.add_resource(Recom, "/<string:profileid>/<string:productid>/<string:shopping_cart>/<int:count>")

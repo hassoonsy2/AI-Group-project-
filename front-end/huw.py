@@ -209,7 +209,7 @@ class HUWebshop(object):
         packet sent to the templating engine, then calss upon Flask to forward
         the rendering to Jinja. """
         if 'r_products' not in packet :
-            packet['r_products'] = self.recommendations(productid= 0,count=4)
+            packet['r_products'] = self.recommendations(productid= 1,count=4)
             packet['r_type'] = list(self.recommendationtypes.keys())[0]
             packet['r_string'] = list(self.recommendationtypes.values())[0]
         packet['categoryindex'] = self.categoryindex
@@ -232,7 +232,7 @@ class HUWebshop(object):
         service. At the moment, it only transmits the profile ID and the number
         of expected recommendations; to have more user information in the REST
         request, this function would have to change."""
-        resp = requests.get(self.recseraddress+"/"+session['profile_id']+"/"+str(productid) +"/"+str(count))
+        resp = requests.get(self.recseraddress+"/"+session['profile_id']+"/"+str(productid) +"/"+str(session['shopping_cart'])+"/"+str(count))
         if resp.status_code == 200:
             recs = eval(resp.content.decode())
             queryfilter = {"_id": {"$in": recs}}
@@ -248,6 +248,7 @@ class HUWebshop(object):
         can retrieve from the database, based on the URL path provided (which
         corresponds to product categories). """
         catlist = [cat1, cat2, cat3, cat4]
+        n = 3
         queryfilter = {}
         nononescats = []
         for k, v in enumerate(catlist):
@@ -270,7 +271,7 @@ class HUWebshop(object):
             'pend': skipindex + session['items_per_page'] if session['items_per_page'] > 0 else prodcount, \
             'prevpage': pagepath+str(page-1) if (page > 1) else False, \
             'nextpage': pagepath+str(page+1) if (session['items_per_page']*page < prodcount) else False, \
-            'r_products':self.recommendations(productid=0,count=4), \
+            'r_products':self.recommendations(productid= n,count=4), \
             'r_type':list(self.recommendationtypes.keys())[4],\
             'r_string':list(self.recommendationtypes.values())[4]
             })
@@ -288,13 +289,15 @@ class HUWebshop(object):
 
     def shoppingcart(self):
         """ This function renders the shopping cart for the user."""
+        ids = []
         i = []
         for tup in session['shopping_cart']:
             product = self.prepproduct(self.database.products.find_one({"_id":str(tup[0])}))
             product["itemcount"] = tup[1]
+            ids.append(product["id"])
             i.append(product)
         return self.renderpackettemplate('shoppingcart.html',{'itemsincart':i,\
-            'r_products':self.recommendations(productid=product,count=4), \
+            'r_products':self.recommendations(productid=2,count=4), \
             'r_type':list(self.recommendationtypes.keys())[2],\
             'r_string':list(self.recommendationtypes.values())[2]})
 
@@ -333,7 +336,8 @@ class HUWebshop(object):
         """ This function changes the number of items displayed on the product 
         listing pages. """
         session['items_per_page'] = int(request.form.get('items_per_page'))
-        # TODO: add method that returns the exact URL the user should be 
+        # TODO: add method that returns the exact URL the user should be
+        print(session['items_per_page'])
         # returned to, including offset
         return '{"success":true, "refurl":"'+request.form.get('refurl')+'"}'
 
