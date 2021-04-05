@@ -26,7 +26,7 @@ database = client.huwebshop
 
 def connect():
     """This function is the connection with the postgres db"""
-    connection = psycopg2.connect(host='localhost', database='huwebshop', user='postgres', password='Xplod_555')
+    connection =  psycopg2.connect(host='localhost', database='huwebshope1', user='postgres', password='Lafa22446688##')
     return connection
 
 c = connect()
@@ -65,7 +65,7 @@ class Recom(Resource):
                    '5bc9f26efd58b6000143d8c8', '5b55eca44a76420001d3e0be', '5b748ee397d5560001983e1b', '5bcb79a291c0f5000101253c',
                    '5bb26141a6578c0001c116a0', '5a09979ea56ac6edb4ef7b99', '5ae4995582f803000187025d', '5b55ac1ce3840d0001cda710',
                    '59dce7c0a56ac6edb4ca7888', '5a140809a56ac6edb4fb3242', '59dcf04ca56ac6edb4dfd3ca', '5b444ca161afda0001c56cb6',]
-    test_id = ['59dce304a56ac6edb4c118e4']
+
 
     def get(self,profileid,productid,shopping_cart,  count ):
         """ This function represents the handler for GET requests coming in
