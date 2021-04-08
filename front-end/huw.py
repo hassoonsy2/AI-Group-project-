@@ -208,7 +208,7 @@ class HUWebshop(object):
         """ This helper function adds all generally important variables to the
         packet sent to the templating engine, then calss upon Flask to forward
         the rendering to Jinja. """
-        if 'r_products' not in packet :
+        if template=="homepage.html":
             packet['r_products'] = self.recommendations(productid= 1,count=4)
             packet['r_type'] = list(self.recommendationtypes.keys())[0]
             packet['r_string'] = list(self.recommendationtypes.values())[0]

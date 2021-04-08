@@ -26,7 +26,7 @@ database = client.huwebshop
 
 def connect():
     """This function is the connection with the postgres db"""
-    connection =  psycopg2.connect(host='localhost', database='huwebshope1', user='postgres', password='Lafa22446688##')
+    connection =  psycopg2.connect(host='localhost', database='huwebshop', user='postgres', password='Xplod_555')
     return connection
 
 c = connect()
@@ -57,66 +57,95 @@ class Recom(Resource):
                  '5bf7d9004dad87000162829d', '5bddd8871e50b2000163ae36', '5b1fae035af3010001051e9a', '5b4dbeb578d4f90001ba08a3',
                  '5a0997a1a56ac6edb4efaab3', '5a7c974a4e0e980001caf309', '5b8c1bf997d556000170f262', '5bb6437a7c4e350001b90690',
                  '5bb2557ea6578c0001c10625', '5b5393574a76420001238237', '5bcc550791c0f500011eea5c', '5b59e00bf88d0300018f2133']
+    
     vrouwen_id = ['5a9ef773a92b240001a673f2', '59dcea98a56ac6edb4d7a782', '5b783e964fd4640001763f5a', '5b03d19f1eabe40001699ede',
                   '5b7c03914fd46400013302bb', '5b7c03914fd46400013302bb', '5b2e439741b2d00001db18dd', '59dceabaa56ac6edb4d7ca7f',
                   '5a3a37a2a825610001bc36a8', '5b913563724039000149dbe3', '5b83dfd183e57a0001d08dac', '59dcef9ba56ac6edb4df30f7',
-                  '59dcec16a56ac6edb4d93f68', '5be9711696e43d00016b4f28', '59dcf05aa56ac6edb4dfe363','59dcec16a56ac6edb4d93f68']
+                  '59dcec16a56ac6edb4d93f68', '5be9711696e43d00016b4f28', '59dcf05aa56ac6edb4dfe363','59dcec16a56ac6edb4d93f68',
+                  '5a0d02e3a56ac6edb4c0ad5a','59dceba9a56ac6edb4d8cd02']
+
     kinderen_id = ['5bdf68482a3017000185ef8f', '59dceb38a56ac6edb4d85167', '5bc9f26efd58b6000143d8c8', '5a0fa5e9a56ac6edb4c7c477',
                    '5bc9f26efd58b6000143d8c8', '5b55eca44a76420001d3e0be', '5b748ee397d5560001983e1b', '5bcb79a291c0f5000101253c',
                    '5bb26141a6578c0001c116a0', '5a09979ea56ac6edb4ef7b99', '5ae4995582f803000187025d', '5b55ac1ce3840d0001cda710',
-                   '59dce7c0a56ac6edb4ca7888', '5a140809a56ac6edb4fb3242', '59dcf04ca56ac6edb4dfd3ca', '5b444ca161afda0001c56cb6',]
+                   '59dce7c0a56ac6edb4ca7888', '5a140809a56ac6edb4fb3242', '59dcf04ca56ac6edb4dfd3ca', '5b444ca161afda0001c56cb6',
+                   '5b445abd61afda0001c57277','5a7ce5090bce0f000198fcf5']
 
 
     def get(self,profileid,productid,shopping_cart,  count ):
         """ This function represents the handler for GET requests coming in
         through the API. It currently returns a random sample of products. """
         randcursor = database.products.aggregate([{ '$sample': { 'size': count } }])
-
-
+        label = ["normaal", "Popular"]
         prod_shoping = shopping_cart[3:8]
 
+        if profileid in self.mannen_id:
 
-        if productid == "1":
-            prdids = self.simpel_reco()
-            return prdids, 200
-
-        elif productid == "2":
-
-
-            prdids = self.schopping(prod_shoping)
-            return prdids, 200
-
-
-        elif productid == "3":
-
-            if profileid in self.mannen_id:
-                prdids = self.Mannen()
+            if productid == "1":
+                prdids = self.Mannen(label[1])
                 return prdids, 200
 
-            elif profileid in self.vrouwen_id:
-
-                prdids = self.Vrouwen()
+            elif productid == "3":
+                prdids = self.Mannen(label[0])
+                return prdids, 200
+            elif productid == "2":
+                prdids = self.schopping(prod_shoping)
                 return prdids, 200
 
-            elif profileid in self.kinderen_id:
-                prdids = self.kinderen()
-                return prdids, 200
-
-            else:
-                prdids = self.simpel_reco()
+            elif productid != "0":
+                prdids = self.soortgelijk(productid)
                 return prdids, 200
 
 
 
-        elif productid != "0":
-            prdids = self.soortgelijk(productid)
-            return prdids, 200
+
+        elif profileid in self.vrouwen_id:
+            if productid == "1":
+                prdids = self.Vrouwen(label[1])
+                return prdids, 200
+
+            elif productid == "3":
+                prdids = self.Vrouwen(label[0])
+                return prdids, 200
+            elif productid == "2":
+                prdids = self.schopping(prod_shoping)
+                return prdids, 200
+
+            elif productid != "0":
+                prdids = self.soortgelijk(productid)
+                return prdids, 200
+
+
+        elif profileid in self.kinderen_id:
+            if productid == "1":
+                prdids = self.kinderen(label[1])
+                return prdids, 200
+
+            elif productid == "3":
+                prdids = self.kinderen(label[0])
+                return prdids, 200
+
+            elif productid == "2" :
+                prdids = self.schopping(prod_shoping)
+                return prdids, 200
+
+            elif productid != "0":
+                prdids = self.soortgelijk(productid)
+                return prdids, 200
+
+
 
 
         else:
+            if productid == "2":
+                prdids = self.schopping(prod_shoping)
+                return prdids, 200
+
+            elif productid != "0":
+                prdids = self.soortgelijk(productid)
+                return prdids, 200
+
             prdids = self.simpel_reco()
             return prdids, 200
-
 
 
 
@@ -152,46 +181,82 @@ class Recom(Resource):
         return id_lists
 
 
-    def Mannen(self):
-        id_list= []
-        result = sql_select("""SELECT prodid
+    def Mannen(self,recom):
+        if recom == "normaal":
+
+            id_list= []
+            result = sql_select("""SELECT prodid
                                 FROM personas_recommendations WHERE targetaudience = 'Mannen'
                                  LIMIT 4 ;""")
-        c.commit()
-        for elment in result:
-            id_list.append(elment[0])
-        return id_list
+            c.commit()
+            for elment in result:
+                id_list.append(elment[0])
+            return id_list
+
+        elif recom == "Popular" :
+            id_list = []
+            result = sql_select("""SELECT prodid
+                                            FROM personas_recommendations WHERE targetaudience = 'Mannen_Popular'
+                                             LIMIT 4 ;""")
+            c.commit()
+            for elment in result:
+                id_list.append(elment[0])
+            return id_list
 
 
-    def Vrouwen(self):
-        id_list= []
-        result = sql_select("""SELECT prodid
+    def Vrouwen(self,recom):
+        if recom == "normaal":
+            id_list= []
+            result = sql_select("""SELECT prodid
                                 FROM personas_recommendations WHERE targetaudience = 'Vrouwen' 
-                                 LIMIT 6  ;""")
-        c.commit()
-        for elment in result:
-            id_list.append(elment[0])
-        return id_list
+                                 LIMIT 5  ;""")
+            c.commit()
+            for elment in result:
+                id_list.append(elment[0])
+            return id_list
+
+        elif recom == "Popular":
+            id_list = []
+            result = sql_select("""SELECT prodid
+                                                   FROM personas_recommendations WHERE targetaudience = 'Vrouwen_Popular'
+                                                    LIMIT 4 ;""")
+            c.commit()
+            for elment in result:
+                id_list.append(elment[0])
+            return id_list
 
 
-    def kinderen(self):
-        id_list= []
-        result = sql_select("""SELECT prodid
-                                FROM personas_recommendations WHERE targetaudience <> 'Vrouwen'  and targetaudience <> 'Mannen'
-                                 LIMIT 4 ;""")
-        c.commit()
-        for elment in result:
-            id_list.append(elment[0])
-        return id_list
+
+    def kinderen(self,recom):
+        if recom == "normaal":
+            id_list= []
+            result = sql_select("""SELECT prodid
+                                    FROM personas_recommendations WHERE targetaudience <> 'Vrouwen'  and targetaudience <> 'Mannen'
+                                     LIMIT 4 ;""")
+            c.commit()
+            for elment in result:
+                id_list.append(elment[0])
+            return id_list
+
+
+        elif recom == "Popular":
+            id_list = []
+            result = sql_select("""SELECT prodid
+                                                   FROM personas_recommendations WHERE targetaudience = 'Kinderen_Popular'
+                                                    LIMIT 4 ;""")
+            c.commit()
+            for elment in result:
+                id_list.append(elment[0])
+            return id_list
+
 
     def schopping(self , prod_shoping):
         id_list = []
 
-        resutls = sql_execute("""select combinatie_nr from combinatie_recommendations where prodid = (%s) ;  """,[prod_shoping])
+        resutls = sql_execute("""select combinatie_nr from combinatie_recommendations where prodid = (%s) limit 1 ;  """,[prod_shoping])
         cominatie = resutls[0]
-        print(cominatie[0])
 
-        id_combinatie = sql_execute("""select prodid from combinatie_recommendations where combinatie_nr = (%s) limit 4 ;""", [cominatie[0]])
+        id_combinatie = sql_execute("""select prodid from combinatie_recommendations where combinatie_nr = (%s) limit 4 ;""", [cominatie])
         for elment in id_combinatie:
             id_list.append(elment[0])
 
