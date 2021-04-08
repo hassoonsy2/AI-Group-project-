@@ -57,7 +57,7 @@ class Recom(Resource):
                  '5bf7d9004dad87000162829d', '5bddd8871e50b2000163ae36', '5b1fae035af3010001051e9a', '5b4dbeb578d4f90001ba08a3',
                  '5a0997a1a56ac6edb4efaab3', '5a7c974a4e0e980001caf309', '5b8c1bf997d556000170f262', '5bb6437a7c4e350001b90690',
                  '5bb2557ea6578c0001c10625', '5b5393574a76420001238237', '5bcc550791c0f500011eea5c', '5b59e00bf88d0300018f2133']
-    
+
     vrouwen_id = ['5a9ef773a92b240001a673f2', '59dcea98a56ac6edb4d7a782', '5b783e964fd4640001763f5a', '5b03d19f1eabe40001699ede',
                   '5b7c03914fd46400013302bb', '5b7c03914fd46400013302bb', '5b2e439741b2d00001db18dd', '59dceabaa56ac6edb4d7ca7f',
                   '5a3a37a2a825610001bc36a8', '5b913563724039000149dbe3', '5b83dfd183e57a0001d08dac', '59dcef9ba56ac6edb4df30f7',
@@ -74,25 +74,25 @@ class Recom(Resource):
     def get(self,profileid,productid,shopping_cart,  count ):
         """ This function represents the handler for GET requests coming in
         through the API. It currently returns a random sample of products. """
-        randcursor = database.products.aggregate([{ '$sample': { 'size': count } }])
+
         label = ["normaal", "Popular"]
         prod_shoping = shopping_cart[3:8]
 
         if profileid in self.mannen_id:
 
             if productid == "1":
-                prdids = self.Mannen(label[1])
+                prdids = self.Mannen_recommendation(label[1])
                 return prdids, 200
 
             elif productid == "3":
-                prdids = self.Mannen(label[0])
+                prdids = self.Mannen_recommendation(label[0])
                 return prdids, 200
             elif productid == "2":
-                prdids = self.schopping(prod_shoping)
+                prdids = self.schopping_car_recommendation(prod_shoping)
                 return prdids, 200
 
             elif productid != "0":
-                prdids = self.soortgelijk(productid)
+                prdids = self.soortgelijk_recommendation(productid)
                 return prdids, 200
 
 
@@ -100,36 +100,36 @@ class Recom(Resource):
 
         elif profileid in self.vrouwen_id:
             if productid == "1":
-                prdids = self.Vrouwen(label[1])
+                prdids = self.Vrouwen_recommendation(label[1])
                 return prdids, 200
 
             elif productid == "3":
-                prdids = self.Vrouwen(label[0])
+                prdids = self.Vrouwen_recommendation(label[0])
                 return prdids, 200
             elif productid == "2":
-                prdids = self.schopping(prod_shoping)
+                prdids = self.schopping_car_recommendation(prod_shoping)
                 return prdids, 200
 
             elif productid != "0":
-                prdids = self.soortgelijk(productid)
+                prdids = self.soortgelijk_recommendation(productid)
                 return prdids, 200
 
 
         elif profileid in self.kinderen_id:
             if productid == "1":
-                prdids = self.kinderen(label[1])
+                prdids = self.kinderen_recommendation(label[1])
                 return prdids, 200
 
             elif productid == "3":
-                prdids = self.kinderen(label[0])
+                prdids = self.kinderen_recommendation(label[0])
                 return prdids, 200
 
             elif productid == "2" :
-                prdids = self.schopping(prod_shoping)
+                prdids = self.schopping_car_recommendation(prod_shoping)
                 return prdids, 200
 
             elif productid != "0":
-                prdids = self.soortgelijk(productid)
+                prdids = self.soortgelijk_recommendation(productid)
                 return prdids, 200
 
 
@@ -137,11 +137,11 @@ class Recom(Resource):
 
         else:
             if productid == "2":
-                prdids = self.schopping(prod_shoping)
+                prdids = self.schopping_car_recommendation(prod_shoping)
                 return prdids, 200
 
             elif productid != "0":
-                prdids = self.soortgelijk(productid)
+                prdids = self.soortgelijk_recommendation(productid)
                 return prdids, 200
 
             prdids = self.simpel_reco()
@@ -154,7 +154,8 @@ class Recom(Resource):
 
 
 
-    def soortgelijk(self, productid):
+    def soortgelijk_recommendation(self, productid):
+        """ This fuction will select the product's from the same  subsubcatgory """
         ids = []
         for i in sql_execute(""" Select subsubcategory from products 
                                           Where id = (%s);""", [productid]) :
@@ -169,7 +170,7 @@ class Recom(Resource):
 
 
 
-    def simpel_reco(self):
+    def simpel_recommendation(self):
         id_lists = []
         result = sql_select(""" SELECT prodid , name
             FROM BEST_seller
@@ -181,7 +182,7 @@ class Recom(Resource):
         return id_lists
 
 
-    def Mannen(self,recom):
+    def Mannen_recommendation(self,recom):
         if recom == "normaal":
 
             id_list= []
@@ -204,7 +205,7 @@ class Recom(Resource):
             return id_list
 
 
-    def Vrouwen(self,recom):
+    def Vrouwen_recommendation(self,recom):
         if recom == "normaal":
             id_list= []
             result = sql_select("""SELECT prodid
@@ -227,7 +228,7 @@ class Recom(Resource):
 
 
 
-    def kinderen(self,recom):
+    def kinderen_recommendation(self,recom):
         if recom == "normaal":
             id_list= []
             result = sql_select("""SELECT prodid
@@ -250,7 +251,7 @@ class Recom(Resource):
             return id_list
 
 
-    def schopping(self , prod_shoping):
+    def schopping_car_recommendation(self , prod_shoping):
         id_list = []
 
         resutls = sql_execute("""select combinatie_nr from combinatie_recommendations where prodid = (%s) limit 1 ;  """,[prod_shoping])
