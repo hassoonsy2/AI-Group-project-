@@ -48,7 +48,7 @@ def sql_query(sql):
 
 
 def select_most_sold_products_from_personas_mannen():
-    """ This function will Select & count every product from Tabel Orders on the Postgres db """
+    """ This function will Select & count every product from Tabel personas_mannen on the Postgres db """
     return sql_select("""SELECT prodid, name,
                        COUNT(*)
                        FROM personas_mannen
@@ -58,7 +58,7 @@ def select_most_sold_products_from_personas_mannen():
 
 
 def select_most_sold_products_from_personas_vrouwen():
-    """ This function will Select & count every product from Tabel Orders on the Postgres db """
+    """ This function will Select & count every product from Tabel personas_vrouwen on the Postgres db """
     return sql_select("""SELECT prodid, name,
                        COUNT(*)
                        FROM personas_vrouwen
@@ -68,16 +68,17 @@ def select_most_sold_products_from_personas_vrouwen():
 
 
 def select_most_sold_products_from_personas_kinderen():
-    """ This function will Select & count every product from Tabel Orders on the Postgres db """
+    """ This function will Select & count every product from Tabel personas_kinderen on the Postgres db """
     return sql_select("""SELECT prodid, name,
                        COUNT(*)
-                       FROM personas_kinderen
+                       FROM v
 
                        GROUP BY prodid ,name 
                        ORDER BY COUNT(*) DESC ; """)
 
 
 def insert_most_sold_products_from_personas_recommendations():
+
     ids=[]
     target = ["Mannen_Popular" , "Vrouwen_Popular", "Kinderen_Popular"]
 
@@ -90,9 +91,11 @@ def insert_most_sold_products_from_personas_recommendations():
     for i in result_mannen[:6]:
         prodoct = i[0],target[0]
         ids.append(prodoct)
+
     for i in result_vrowuen[:6]:
         prodoct = i[0], target[1]
         ids.append(prodoct)
+
     for i in result_kinderen[:6]:
         prodoct = i[0], target[2]
         ids.append(prodoct)

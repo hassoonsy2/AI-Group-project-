@@ -59,6 +59,7 @@ c.commit()
 
 
 def picking_freq_orders():
+    """ This function select the function will select the session id and how many products are bought """
 
     return sql_select("""SELECT orders.sessionsid,
                        COUNT(prodid)
@@ -69,9 +70,9 @@ def picking_freq_orders():
 
 
 
-def filtring(result):
-    id_list = []
+def filtering(result):
 
+    id_list = []
     for i in result :
         if i[1] >= 4 :
             id_list.append(i)
@@ -86,8 +87,8 @@ def filtring(result):
 
 
 def picking_products(profiels_list_orders):
+    """ This function will select the product's from the same session id"""
     ids = []
-
     combinatie = 0
     for i in profiels_list_orders :
         ids_orders =sql_execute("""select orders.prodid  
@@ -115,6 +116,6 @@ def picking_products(profiels_list_orders):
 
 
 
-x= filtring(picking_freq_orders())
-picking_products(x)
+sessions_ids= filtering(picking_freq_orders())
+picking_products(sessions_ids)
 

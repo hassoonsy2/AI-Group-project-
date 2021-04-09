@@ -155,7 +155,7 @@ class Recom(Resource):
 
 
     def soortgelijk_recommendation(self, productid):
-        """ This fuction will select the product's from the same  subsubcatgory """
+        """ This fuction will select the subsunbcateory and return product's from the same subsubcategory """
         ids = []
         for i in sql_execute(""" Select subsubcategory from products 
                                           Where id = (%s);""", [productid]) :
@@ -171,6 +171,7 @@ class Recom(Resource):
 
 
     def simpel_recommendation(self):
+        """This function will return products from tabel Best_seller"""
         id_lists = []
         result = sql_select(""" SELECT prodid , name
             FROM BEST_seller
@@ -183,6 +184,7 @@ class Recom(Resource):
 
 
     def Mannen_recommendation(self,recom):
+        """ This function will return man's type of products from tabel personas_recommendations  """
         if recom == "normaal":
 
             id_list= []
@@ -206,6 +208,7 @@ class Recom(Resource):
 
 
     def Vrouwen_recommendation(self,recom):
+        """ This function will return woman's type of products from tabel personas_recommendations  """
         if recom == "normaal":
             id_list= []
             result = sql_select("""SELECT prodid
@@ -229,6 +232,7 @@ class Recom(Resource):
 
 
     def kinderen_recommendation(self,recom):
+        """ This function will return childeren type of products from tabel personas_recommendations  """
         if recom == "normaal":
             id_list= []
             result = sql_select("""SELECT prodid
@@ -252,6 +256,7 @@ class Recom(Resource):
 
 
     def schopping_car_recommendation(self , prod_shoping):
+        """ This function will select the combnation nummber and return product's from the same combnation nummber"""
         id_list = []
 
         resutls = sql_execute("""select combinatie_nr from combinatie_recommendations where prodid = (%s) limit 1 ;  """,[prod_shoping])
